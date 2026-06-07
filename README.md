@@ -52,7 +52,40 @@ npm run dev
 
 자세한 내용은 `docs/codex-connection.md`를 확인한다.
 
-휴대폰의 Codex에서 Local Company PM에게 메시지를 전달하려면 `install-local-company-mcp.cmd`로 MCP 도구를 등록한다. 자세한 내용은 `docs/codex-mobile-pm-bridge.md`를 확인한다.
+## MCP 연결 빠른 방법
+
+휴대폰이나 다른 Codex 대화에서 Local Company PM에게 메시지를 전달하려면 MCP 도구를 등록한다.
+
+1. 이 프로젝트 폴더에서 `npm install`을 실행한다.
+2. `start-local-company.cmd`를 실행해서 Local Company V2를 켠다.
+3. Codex CLI를 설치하고 본인의 Codex/ChatGPT 계정으로 로그인한다.
+
+```bash
+npm install -g @openai/codex
+codex
+```
+
+4. 프로젝트 폴더의 `install-local-company-mcp.cmd`를 실행한다.
+5. Codex 앱을 재시작하거나 새 Codex 대화를 연다.
+6. Codex에게 다음처럼 요청한다.
+
+```text
+Local Company 캠페인 목록 확인해줘.
+```
+
+또는:
+
+```text
+Local Company PM에게 "지금 캠페인 방향을 검토해줘"라고 전달하고 답변 받아줘.
+```
+
+잘 모르겠다면 이 프로젝트 폴더를 통째로 Codex에 열어준 뒤 이렇게 물어본다.
+
+```text
+이 폴더의 README와 docs를 보고 Local Company V2의 MCP 연결을 도와줘.
+```
+
+단, 다른 사람에게 폴더를 전달할 때는 실제 `.env`, `data/`, SQLite 파일, 실행 로그가 포함되지 않도록 한다. 자세한 내용은 `docs/codex-mobile-pm-bridge.md`를 확인한다.
 
 ## 개인정보와 계정 정보
 
