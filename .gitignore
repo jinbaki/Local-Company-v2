@@ -1,0 +1,15 @@
+.env
+data/
+.data/
+data-sample/*
+!data-sample/README.md
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+node_modules/
+dist/
+coverage/
+*.log
+*.log.*
+.DS_Store
+Thumbs.db
