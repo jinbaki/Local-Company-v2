@@ -241,6 +241,19 @@ function createOwnerDecision(db: DatabaseSync, campaignId: string, title: string
      VALUES (?, ?, 'decision', ?, 'open', ?)`
   ).run(decisionId, campaignId, title, reason);
 
+  db.prepare(
+    `INSERT INTO events (id, type, campaign_id, payload)
+     VALUES (?, 'decision_requested', ?, ?)`
+  ).run(
+    createId("event"),
+    campaignId,
+    JSON.stringify({
+      decisionId,
+      title,
+      reason
+    })
+  );
+
   for (const blockedId of blocks) {
     db.prepare(
       `INSERT INTO graph_edges (id, campaign_id, from_node_id, to_node_id, relation)
@@ -728,6 +741,18 @@ function runArtifactRevisionQueueItem(db: DatabaseSync, config: AppConfig, queue
   if ((queued.attempt ?? 0) >= queued.maxAttempts) {
     db.prepare("UPDATE queue_items SET status = 'failed', updated_at = CURRENT_TIMESTAMP WHERE id = ?").run(queued.id);
     updateRevisionRequestStatus(db, queued.id, "failed");
+    db.prepare(
+      `INSERT INTO events (id, type, campaign_id, payload)
+       VALUES (?, 'queue_item_failed', ?, ?)`
+    ).run(
+      createId("event"),
+      queued.campaignId,
+      JSON.stringify({
+        queueItemId: queued.id,
+        type: queued.type,
+        message: "최대 재작업 횟수에 도달해 작업을 중단했습니다."
+      })
+    );
     return {
       queueItem: getQueueItem(db, queued.id),
       message: "최대 재작업 횟수에 도달해 작업을 중단했습니다."

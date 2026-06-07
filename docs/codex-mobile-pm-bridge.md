@@ -32,6 +32,8 @@ ChatGPT 모바일 Codex
 | --- | --- |
 | `local_company_status` | Local Company 앱 실행 여부, 캠페인 수, 열린 결정 수 확인 |
 | `local_company_list_campaigns` | 사업부와 캠페인 목록 확인 |
+| `local_company_list_notifications` | 새 PM 답변, 산출물 완료, 결정 요청, 실패 작업 같은 가벼운 알림 목록 확인 |
+| `local_company_mark_notifications_seen` | Codex가 보고한 알림의 확인 위치 저장 |
 | `local_company_get_pm_workspace` | 특정 캠페인의 PM 대화, 참고자료, 작업/산출물/결정 요약 읽기 |
 | `local_company_add_reference` | 첨부 파일, 가이드, URL, 메모를 특정 캠페인의 PM 참고자료로 저장 |
 | `local_company_send_pm_message` | 대표 메시지를 캠페인 PM에게 전달하고 PM 답변 받기 |
@@ -98,6 +100,21 @@ Codex 모바일 연결은 Codex 앱의 원격 연결 기능을 사용한다.
 
 Codex는 첨부 파일의 관련 텍스트를 읽어 `local_company_add_reference`로 저장한 다음 `local_company_send_pm_message`로 PM에게 지시한다. 단순히 파일 경로만 PM에게 보내면 Local Company PM이 원문을 읽지 못할 수 있다.
 
+## 풀링 알림
+
+Codex가 주기적으로 새 소식을 확인해야 할 때는 `local_company_list_notifications`만 호출한다. 이 도구는 긴 대화 본문이나 산출물 본문을 읽지 않고 다음처럼 짧은 이벤트만 반환한다.
+
+- PM 답변 도착
+- 운영판 반영 완료
+- PM 팀 제안 도착
+- 대표 결정 필요
+- 산출물 초안 생성
+- 산출물 승인 완료
+- 산출물 재작업 완료
+- AI 작업 실패
+
+알림을 사용자에게 보고한 뒤에는 `local_company_mark_notifications_seen`으로 확인 위치를 저장한다. 자세한 요약이나 본문 확인은 사용자가 요청할 때만 `local_company_get_pm_workspace` 또는 산출물 도구로 이어간다.
+
 ## 다른 사용자가 설치할 때
 
 이 MCP 연결은 저장소 소유자의 Codex 계정을 공유하는 방식이 아니다. 각 사용자는 자신의 PC에서 저장소를 클론하고, 자신의 Codex CLI 또는 Codex 앱에 로그인한 뒤 `install-local-company-mcp.cmd`를 실행한다.
@@ -124,7 +141,7 @@ uninstall-local-company-mcp.cmd
 ## 보안 기준
 
 - Local Company HTTP 서버는 로컬 루프백 주소만 사용한다.
-- MCP 도구는 PM 대화 전달, 읽기, 참고자료 추가, 명시적 사업부/캠페인 생성 중심으로 제한한다.
+- MCP 도구는 PM 대화 전달, 읽기, 가벼운 알림 확인, 참고자료 추가, 명시적 사업부/캠페인 생성 중심으로 제한한다.
 - 삭제, 로컬 파일 임의 접근, 외부 공개 서버 실행은 MCP 도구에 넣지 않는다.
 - `local_company_send_pm_message`는 실제 PM runner를 호출할 수 있으므로, Codex CLI 실행 모드에서는 시간과 비용이 발생할 수 있다.
 

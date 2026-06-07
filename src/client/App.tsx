@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { FormEvent, KeyboardEvent, ReactElement, ReactNode } from "react";
+import type { CSSProperties, FormEvent, KeyboardEvent, ReactElement, ReactNode } from "react";
 import {
   Building2,
   CheckCircle2,
@@ -81,6 +81,10 @@ async function requestJson<T>(url: string, init?: RequestInit): Promise<T> {
   }
 
   return response.json() as Promise<T>;
+}
+
+function clampNumber(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
 }
 
 export function App(): ReactElement {
@@ -1153,6 +1157,15 @@ function CampaignView({
   const [isDeletingCampaign, setIsDeletingCampaign] = useState(false);
   const [approvingProposalId, setApprovingProposalId] = useState<string | null>(null);
   const [isAddingReference, setIsAddingReference] = useState(false);
+  const [pmPanelWidth, setPmPanelWidth] = useState(() => {
+    const stored = window.localStorage.getItem("local-company.pmPanelWidth");
+    const parsed = stored ? Number.parseInt(stored, 10) : 560;
+    return Number.isFinite(parsed) ? clampNumber(parsed, 460, 760) : 560;
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem("local-company.pmPanelWidth", String(pmPanelWidth));
+  }, [pmPanelWidth]);
 
   async function loadWorkspace(): Promise<void> {
     const nextWorkspace = await requestJson<CampaignWorkspaceResponse>(`/api/campaigns/${campaignId}`);
@@ -1354,11 +1367,25 @@ function CampaignView({
           </div>
         }
       />
-      <section className="campaign-layout">
+      <section className="campaign-layout" style={{ "--pm-panel-width": `${pmPanelWidth}px` } as CSSProperties}>
         <div className="pm-panel">
           <div className="section-heading">
             <h2>PM 대화</h2>
             <div className="inline-actions">
+              <label className="width-control" title="PM 대화 패널 가로 폭">
+                <span>대화 폭</span>
+                <input
+                  aria-label="PM 대화 패널 가로 폭"
+                  max={760}
+                  min={460}
+                  step={20}
+                  type="range"
+                  value={pmPanelWidth}
+                  onChange={(event) => {
+                    setPmPanelWidth(Number.parseInt(event.target.value, 10));
+                  }}
+                />
+              </label>
               <span className="status-badge neutral">{workspace.pm?.name ?? "PM"}</span>
               <button
                 className="secondary-button compact-button"

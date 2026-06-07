@@ -8,14 +8,17 @@ Changes:
 
 - Added a Local Company MCP server for Codex.
 - Exposed safe PM bridge tools: status, campaign list, PM workspace read, reference add, PM message send, explicit division creation, and explicit campaign creation.
+- Added lightweight polling notification tools for new PM replies, board updates, artifact completion, owner decisions, and failed AI work.
 - Added Windows scripts to register and remove the MCP server from Codex.
 - Documented the mobile Codex to Local Company PM bridge flow.
 - Changed the public default worker and scribe models to `gpt-5.5` after local Codex CLI verification showed `gpt-5.3-codex` can be rejected for some ChatGPT-account CLI sessions.
+- Made the campaign PM conversation panel wider by default and user-adjustable in the campaign board.
 
 Reason:
 
 - The owner wanted to exchange opinions with the Local Company PM through Codex mobile or route Codex commands back to the PM.
 - The owner needed attached/reference content to be stored in Local Company before PM instructions, and needed public defaults that work across more accounts.
+- The owner wanted low-usage polling notifications and a wider PM conversation area without horizontal scrolling.
 
 ---
 

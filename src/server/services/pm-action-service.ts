@@ -565,6 +565,19 @@ function applyRequestDecision(
 
   insertGraphNode(db, campaignId, decisionId, "decision", action.title, "open", action.decisionReason);
 
+  db.prepare(
+    `INSERT INTO events (id, type, campaign_id, payload)
+     VALUES (?, 'decision_requested', ?, ?)`
+  ).run(
+    createId("event"),
+    campaignId,
+    JSON.stringify({
+      decisionId,
+      title: action.title,
+      reason: action.decisionReason
+    })
+  );
+
   for (const blockedId of blocks) {
     insertGraphEdge(db, campaignId, decisionId, blockedId, "blocks");
   }

@@ -147,6 +147,19 @@ export function createTeamProposal(
      VALUES (?, ?, ?, ?, ?, 'pending')`
   ).run(proposalId, campaignId, title, reason, JSON.stringify(members));
 
+  db.prepare(
+    `INSERT INTO events (id, type, campaign_id, payload)
+     VALUES (?, 'campaign_team_proposal_created', ?, ?)`
+  ).run(
+    createId("event"),
+    campaignId,
+    JSON.stringify({
+      proposalId,
+      title,
+      memberCount: members.length
+    })
+  );
+
   const created = listTeamProposals(db, campaignId).find((proposal) => proposal.id === proposalId);
   if (!created) {
     throw new Error("PM 팀 제안을 저장했지만 다시 조회하지 못했습니다.");

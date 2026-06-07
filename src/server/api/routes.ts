@@ -15,6 +15,9 @@ import type {
   DeleteCampaignResponse,
   DeleteDivisionResponse,
   GenerateHandoffReportResponse,
+  ListNotificationsResponse,
+  MarkNotificationsSeenRequest,
+  MarkNotificationsSeenResponse,
   QueueRunResponse,
   RequestArtifactRevisionRequest,
   RequestArtifactRevisionResponse,
@@ -45,9 +48,23 @@ import { approveTeamProposal } from "../services/team-proposal-service.js";
 import { createCampaignReference, listCampaignReferences } from "../services/reference-service.js";
 import { checkCodexConnection, openCodexLoginTerminal, updateRunnerSettings } from "../services/runner-settings-service.js";
 import { deleteCampaign, deleteDivision } from "../services/delete-service.js";
+import { listNotifications, markNotificationsSeen } from "../services/notification-service.js";
 
 function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : "요청을 처리하지 못했습니다.";
+}
+
+function readPositiveNumber(value: unknown): number | undefined {
+  if (typeof value !== "string") {
+    return undefined;
+  }
+
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
+}
+
+function readBoolean(value: unknown): boolean {
+  return value === "true" || value === "1";
 }
 
 export function createApiRouter(context: DatabaseContext): Router {
@@ -94,6 +111,21 @@ export function createApiRouter(context: DatabaseContext): Router {
     } catch (error: unknown) {
       response.status(400).json({ message: getErrorMessage(error) });
     }
+  });
+
+  router.get("/notifications", (request, response) => {
+    const payload: ListNotificationsResponse = listNotifications(context.db, {
+      afterSequence: readPositiveNumber(request.query.afterSequence),
+      limit: readPositiveNumber(request.query.limit),
+      includeSeen: readBoolean(request.query.includeSeen)
+    });
+    response.status(200).json(payload);
+  });
+
+  router.post("/notifications/seen", (request, response) => {
+    const body = request.body as MarkNotificationsSeenRequest;
+    const payload: MarkNotificationsSeenResponse = markNotificationsSeen(context.db, body.sequence);
+    response.status(200).json(payload);
   });
 
   router.post("/campaigns", (request, response) => {

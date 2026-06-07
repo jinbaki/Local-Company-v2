@@ -169,7 +169,19 @@ export function sendOwnerMessage(
   appendMessage(db, config, campaignId, "owner", "대표(나)", trimmed);
   const referenceContext = renderReferenceContext(db, campaignId);
   const reply = createPmReply(config, campaign, trimmed, referenceContext);
-  appendMessage(db, config, campaignId, "pm", campaign.pmName ?? "캠페인 PM", reply);
+  const pmMessage = appendMessage(db, config, campaignId, "pm", campaign.pmName ?? "캠페인 PM", reply);
+  db.prepare(
+    `INSERT INTO events (id, type, campaign_id, payload)
+     VALUES (?, 'pm_reply_created', ?, ?)`
+  ).run(
+    createId("event"),
+    campaignId,
+    JSON.stringify({
+      messageId: pmMessage.id,
+      pmName: pmMessage.authorName,
+      preview: reply.slice(0, 240)
+    })
+  );
   extractValidateAndApplyPmActions(db, config, campaign, trimmed, reply);
   syncQueueForCampaign(db, campaignId);
 

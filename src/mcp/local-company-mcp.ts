@@ -11,6 +11,8 @@ import type {
   CreateCampaignReferenceResponse,
   CreateDivisionRequest,
   DivisionSummary,
+  ListNotificationsResponse,
+  MarkNotificationsSeenResponse,
   SendMessageResponse
 } from "../shared/types/app-state.js";
 import type { HealthResponse } from "../shared/types/health.js";
@@ -125,6 +127,44 @@ const tools: ToolDefinition[] = [
         includeDone: {
           type: "boolean",
           description: "Whether to include completed and archived campaigns. Defaults to true."
+        }
+      },
+      additionalProperties: false
+    }
+  },
+  {
+    name: "local_company_list_notifications",
+    description:
+      "List lightweight Local Company notifications such as new PM replies, completed artifacts, owner decisions, and failed AI work. Use this for low-cost polling.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        afterSequence: {
+          type: "number",
+          description: "Optional event sequence cursor. Only notifications after this sequence are returned."
+        },
+        limit: {
+          type: "number",
+          description: "Maximum notifications to return. Defaults to 20 and caps at 50."
+        },
+        includeSeen: {
+          type: "boolean",
+          description: "Whether to include notifications already marked seen. Defaults to false."
+        }
+      },
+      additionalProperties: false
+    }
+  },
+  {
+    name: "local_company_mark_notifications_seen",
+    description:
+      "Mark Local Company notifications as seen up to a sequence. Use after reporting notifications to the user.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        sequence: {
+          type: "number",
+          description: "Mark notifications up to this sequence. Defaults to the latest notification sequence."
         }
       },
       additionalProperties: false
@@ -338,6 +378,28 @@ class LocalCompanyApiClient {
     return this.request<AppStateResponse>("/api/app-state");
   }
 
+  async notifications(input: { afterSequence?: number; limit?: number; includeSeen?: boolean }): Promise<ListNotificationsResponse> {
+    const params = new URLSearchParams();
+    if (input.afterSequence) {
+      params.set("afterSequence", String(input.afterSequence));
+    }
+    if (input.limit) {
+      params.set("limit", String(input.limit));
+    }
+    if (input.includeSeen) {
+      params.set("includeSeen", "true");
+    }
+
+    return this.request<ListNotificationsResponse>(`/api/notifications${params.size ? `?${params}` : ""}`);
+  }
+
+  async markNotificationsSeen(sequence?: number): Promise<MarkNotificationsSeenResponse> {
+    return this.request<MarkNotificationsSeenResponse>("/api/notifications/seen", {
+      method: "POST",
+      body: JSON.stringify({ sequence })
+    });
+  }
+
   async workspace(campaignId: string): Promise<CampaignWorkspaceResponse> {
     return this.request<CampaignWorkspaceResponse>(`/api/campaigns/${encodeURIComponent(campaignId)}`);
   }
@@ -537,6 +599,18 @@ async function callTool(name: string, args: Record<string, unknown>): Promise<un
       }))
     };
     return output;
+  }
+
+  if (name === "local_company_list_notifications") {
+    return client.notifications({
+      afterSequence: optionalNumber(args, "afterSequence", 0) || undefined,
+      limit: optionalNumber(args, "limit", 20),
+      includeSeen: optionalBoolean(args, "includeSeen", false)
+    });
+  }
+
+  if (name === "local_company_mark_notifications_seen") {
+    return client.markNotificationsSeen(optionalNumber(args, "sequence", 0) || undefined);
   }
 
   if (name === "local_company_get_pm_workspace") {

@@ -378,3 +378,32 @@ export interface ApproveCampaignTeamProposalResponse {
   assignedWorkers: CampaignWorkerSummary[];
   message: string;
 }
+
+export interface LocalCompanyNotification {
+  sequence: number;
+  eventId: string;
+  type: string;
+  campaignId: string | null;
+  campaignTitle: string | null;
+  title: string;
+  summary: string;
+  createdAt: string;
+  seen: boolean;
+}
+
+export interface ListNotificationsResponse {
+  notifications: LocalCompanyNotification[];
+  latestSequence: number;
+  lastSeenSequence: number;
+  unseenCount: number;
+}
+
+export interface MarkNotificationsSeenRequest {
+  sequence?: number;
+}
+
+export interface MarkNotificationsSeenResponse {
+  lastSeenSequence: number;
+  unseenCount: number;
+  message: string;
+}

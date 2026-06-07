@@ -21,6 +21,7 @@ import { createPmReply, createWorkerArtifactContent, reviewArtifactWithPm } from
 import { approveTeamProposal } from "../src/server/services/team-proposal-service.js";
 import { createCampaignReference, listCampaignReferences, renderReferenceContext } from "../src/server/services/reference-service.js";
 import { checkCodexConnection } from "../src/server/services/runner-settings-service.js";
+import { listNotifications, markNotificationsSeen } from "../src/server/services/notification-service.js";
 
 function createTestConfig(): AppConfig {
   const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "local-company-v2-"));
@@ -337,6 +338,11 @@ describe("Phase 0 foundation", () => {
     expect(messages[0].role).toBe("owner");
     expect(messages[1].role).toBe("pm");
     expect(listMessages(context.db, campaign.id)).toHaveLength(2);
+    const notifications = listNotifications(context.db);
+    expect(notifications.notifications.some((item) => item.type === "pm_reply_created")).toBe(true);
+    expect(notifications.unseenCount).toBeGreaterThan(0);
+    const seen = markNotificationsSeen(context.db, notifications.latestSequence);
+    expect(seen.unseenCount).toBe(0);
     expect(
       fs.existsSync(
         path.join(

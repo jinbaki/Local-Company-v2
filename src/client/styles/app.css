@@ -861,9 +861,9 @@ tr:last-child td {
 .campaign-layout {
   display: grid;
   align-items: start;
-  grid-template-columns: 420px minmax(0, 1fr);
+  grid-template-columns: minmax(460px, var(--pm-panel-width, 560px)) minmax(360px, 1fr);
   gap: 24px;
-  max-width: 1280px;
+  max-width: min(1600px, 100%);
   height: clamp(500px, calc(100vh - 200px), 720px);
   margin: 0 auto;
 }
@@ -917,12 +917,29 @@ tr:last-child td {
   font-size: 11px;
 }
 
+.width-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  color: #667085;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.width-control input {
+  width: 92px;
+  accent-color: #2563eb;
+}
+
 .message-list {
   display: grid;
   align-content: start;
   gap: 14px;
   min-height: 0;
   overflow: auto;
+  overflow-x: hidden;
   padding-right: 4px;
 }
 
@@ -949,6 +966,8 @@ tr:last-child td {
   background: #f7f8fa;
   line-height: 1.55;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .message.owner p {
@@ -1144,6 +1163,10 @@ tr:last-child td {
   .campaign-layout {
     grid-template-columns: 1fr;
     height: auto;
+  }
+
+  .width-control {
+    display: none;
   }
 
   .pm-panel {
