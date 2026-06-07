@@ -64,8 +64,8 @@ Codex CLI가 ChatGPT 계정 로그인 또는 API 키 인증 흐름을 안내한�
 CODEX_RUNNER=codex-cli
 CODEX_CLI_BIN=codex
 CODEX_PM_MODEL=gpt-5.5
-CODEX_WORKER_MODEL=gpt-5.3-codex
-CODEX_SCRIBE_MODEL=gpt-5.3-codex
+CODEX_WORKER_MODEL=gpt-5.5
+CODEX_SCRIBE_MODEL=gpt-5.5
 CODEX_TIMEOUT_MS=600000
 CODEX_EXEC_ARGS=
 ```
@@ -92,7 +92,7 @@ CODEX_EXEC_ARGS=--sandbox read-only
 | 산출물 수정 | 수정 요청을 반영한 새 산출물 버전 작성 | `CODEX_WORKER_MODEL` |
 | PM 리뷰 | 산출물을 승인, 재작업, 대표 결정 필요 중 하나로 판정 | `CODEX_PM_MODEL` |
 
-기본 모델 후보는 Codex 공식 모델명 기준으로 둔다. PM은 계획과 판단 품질을 우선해 `gpt-5.5`, worker와 scribe는 코딩/구조화 작업에 맞춰 `gpt-5.3-codex`를 사용한다. 실제 사용 가능 모델은 로그인한 ChatGPT/API 계정 권한에 따라 달라질 수 있다.
+기본 모델 후보는 PM, worker, scribe 모두 `gpt-5.5`로 둔다. 공개 배포판은 계정별 모델 권한 차이로 처음부터 실패하지 않는 구성을 우선한다. `gpt-5.3-codex` 같은 Codex 전용 모델은 공식 모델 목록에 있더라도 로그인한 ChatGPT/API 계정과 Codex CLI 표면에서 지원될 때만 설정 화면에서 직접 바꾼다.
 
 Codex CLI 실행 결과가 실패하거나 시간이 초과되면 해당 큐 항목은 `failed` 상태로 바뀌고, 오류 메시지가 앱에 남는다. 실패한 작업은 설정과 인증 상태를 확인한 뒤 다시 실행한다.
 

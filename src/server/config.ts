@@ -62,8 +62,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     codexRunner: env.CODEX_RUNNER ?? "mock",
     codexCliBin: env.CODEX_CLI_BIN ?? "codex",
     codexPmModel: env.CODEX_PM_MODEL ?? "gpt-5.5",
-    codexWorkerModel: env.CODEX_WORKER_MODEL ?? "gpt-5.3-codex",
-    codexScribeModel: env.CODEX_SCRIBE_MODEL ?? "gpt-5.3-codex",
+    codexWorkerModel: env.CODEX_WORKER_MODEL ?? "gpt-5.5",
+    codexScribeModel: env.CODEX_SCRIBE_MODEL ?? "gpt-5.5",
     codexTimeoutMs: readNumber(env.CODEX_TIMEOUT_MS, 600000),
     codexExecArgs: readArgs(env.CODEX_EXEC_ARGS)
   };

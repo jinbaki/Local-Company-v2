@@ -122,8 +122,8 @@ export function getRunnerSettings(config: AppConfig): HealthResponse["runner"] {
     mode: config.codexRunner ?? "mock",
     cliBin: config.codexCliBin ?? "codex",
     pmModel: config.codexPmModel ?? "gpt-5.5",
-    workerModel: config.codexWorkerModel ?? "gpt-5.3-codex",
-    scribeModel: config.codexScribeModel ?? "gpt-5.3-codex",
+    workerModel: config.codexWorkerModel ?? "gpt-5.5",
+    scribeModel: config.codexScribeModel ?? "gpt-5.5",
     execArgs: config.codexExecArgs ?? [],
     timeoutMs: config.codexTimeoutMs ?? 600000
   };
@@ -133,8 +133,8 @@ export function applyPersistedRunnerSettings(db: DatabaseSync, config: AppConfig
   config.codexRunner = normalizeMode(getMeta(db, keys.mode) ?? config.codexRunner);
   config.codexCliBin = getMeta(db, keys.cliBin) ?? config.codexCliBin ?? "codex";
   config.codexPmModel = getMeta(db, keys.pmModel) ?? config.codexPmModel ?? "gpt-5.5";
-  config.codexWorkerModel = getMeta(db, keys.workerModel) ?? config.codexWorkerModel ?? "gpt-5.3-codex";
-  config.codexScribeModel = getMeta(db, keys.scribeModel) ?? config.codexScribeModel ?? "gpt-5.3-codex";
+  config.codexWorkerModel = getMeta(db, keys.workerModel) ?? config.codexWorkerModel ?? "gpt-5.5";
+  config.codexScribeModel = getMeta(db, keys.scribeModel) ?? config.codexScribeModel ?? "gpt-5.5";
 }
 
 export function updateRunnerSettings(

@@ -33,7 +33,9 @@ ChatGPT 모바일 Codex
 | `local_company_status` | Local Company 앱 실행 여부, 캠페인 수, 열린 결정 수 확인 |
 | `local_company_list_campaigns` | 사업부와 캠페인 목록 확인 |
 | `local_company_get_pm_workspace` | 특정 캠페인의 PM 대화, 참고자료, 작업/산출물/결정 요약 읽기 |
+| `local_company_add_reference` | 첨부 파일, 가이드, URL, 메모를 특정 캠페인의 PM 참고자료로 저장 |
 | `local_company_send_pm_message` | 대표 메시지를 캠페인 PM에게 전달하고 PM 답변 받기 |
+| `local_company_create_division` | 사용자가 명시적으로 요청한 경우 새 사업부와 사업부 PM 생성 |
 | `local_company_create_campaign` | 사용자가 명시적으로 요청한 경우 새 캠페인 생성 |
 
 삭제 도구는 제공하지 않는다. 캠페인과 사업부 삭제는 Local Company 앱 화면에서 직접 확인 후 실행한다.
@@ -88,6 +90,14 @@ Codex 모바일 연결은 Codex 앱의 원격 연결 기능을 사용한다.
 
 휴대폰에서 Codex를 열고 연결된 PC 호스트를 선택한 뒤, Local Company PM에게 전달할 메시지를 요청한다.
 
+첨부 파일이나 긴 가이드가 있다면 먼저 참고자료로 저장한 뒤 PM에게 지시한다.
+
+```text
+첨부한 content-authoring-guide.md 내용을 Local Company의 "습관 형성 앱 콘텐츠 개발" 캠페인 참고자료로 추가하고, 그 자료를 기준으로 PM에게 트랙 제작 계획을 세우라고 지시해줘.
+```
+
+Codex는 첨부 파일의 관련 텍스트를 읽어 `local_company_add_reference`로 저장한 다음 `local_company_send_pm_message`로 PM에게 지시한다. 단순히 파일 경로만 PM에게 보내면 Local Company PM이 원문을 읽지 못할 수 있다.
+
 ## 다른 사용자가 설치할 때
 
 이 MCP 연결은 저장소 소유자의 Codex 계정을 공유하는 방식이 아니다. 각 사용자는 자신의 PC에서 저장소를 클론하고, 자신의 Codex CLI 또는 Codex 앱에 로그인한 뒤 `install-local-company-mcp.cmd`를 실행한다.
@@ -114,7 +124,7 @@ uninstall-local-company-mcp.cmd
 ## 보안 기준
 
 - Local Company HTTP 서버는 로컬 루프백 주소만 사용한다.
-- MCP 도구는 PM 대화 전달과 읽기 중심으로 제한한다.
+- MCP 도구는 PM 대화 전달, 읽기, 참고자료 추가, 명시적 사업부/캠페인 생성 중심으로 제한한다.
 - 삭제, 로컬 파일 임의 접근, 외부 공개 서버 실행은 MCP 도구에 넣지 않는다.
 - `local_company_send_pm_message`는 실제 PM runner를 호출할 수 있으므로, Codex CLI 실행 모드에서는 시간과 비용이 발생할 수 있다.
 

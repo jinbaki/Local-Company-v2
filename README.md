@@ -48,7 +48,7 @@ npm run dev
 
 ## Codex 연결
 
-기본값은 공개 데모용 `mock` 실행이다. 로컬에 Codex CLI를 설치하고 로그인한 뒤 `.env`에서 `CODEX_RUNNER=codex-cli`로 바꾸면 PM 답변, PM 액션 서기, 직원 실행, 산출물 수정, PM 리뷰가 `codex exec`로 실행된다. 기본 모델 후보는 PM `gpt-5.5`, worker `gpt-5.3-codex`, scribe `gpt-5.3-codex`다.
+기본값은 공개 데모용 `mock` 실행이다. 로컬에 Codex CLI를 설치하고 로그인한 뒤 `.env`에서 `CODEX_RUNNER=codex-cli`로 바꾸면 PM 답변, PM 액션 서기, 직원 실행, 산출물 수정, PM 리뷰가 `codex exec`로 실행된다. 기본 모델 후보는 PM, worker, scribe 모두 `gpt-5.5`다. `gpt-5.3-codex` 같은 Codex 전용 모델은 계정과 Codex CLI 표면에서 지원될 때만 직접 설정한다.
 
 자세한 내용은 `docs/codex-connection.md`를 확인한다.
 
@@ -77,6 +77,12 @@ Local Company 캠페인 목록 확인해줘.
 
 ```text
 Local Company PM에게 "지금 캠페인 방향을 검토해줘"라고 전달하고 답변 받아줘.
+```
+
+첨부 파일이나 긴 가이드를 PM이 참고해야 하면 먼저 참고자료로 저장하라고 요청한다.
+
+```text
+첨부한 가이드를 Local Company의 "습관 형성 앱 콘텐츠 개발" 캠페인 참고자료로 추가하고, 그 자료를 기준으로 PM에게 작업 계획을 세우라고 지시해줘.
 ```
 
 잘 모르겠다면 이 프로젝트 폴더를 통째로 Codex에 열어준 뒤 이렇게 물어본다.
