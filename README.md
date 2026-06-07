@@ -54,6 +54,12 @@ npm run dev
 
 휴대폰의 Codex에서 Local Company PM에게 메시지를 전달하려면 `install-local-company-mcp.cmd`로 MCP 도구를 등록한다. 자세한 내용은 `docs/codex-mobile-pm-bridge.md`를 확인한다.
 
+## 개인정보와 계정 정보
+
+이 저장소에는 실제 `.env`, SQLite 데이터, 로컬 실행 로그, Codex 인증 파일, API 키를 커밋하지 않는다. `install-local-company-mcp.cmd`는 실행한 사용자의 PC에서만 Codex MCP 도구를 등록하며, 저장소에 특정 사용자의 Codex ID나 토큰을 넣지 않는다.
+
+다른 사용자가 이 저장소를 클론하면 그 사용자는 자신의 PC에서 `npm install`, `start-local-company.cmd`, `install-local-company-mcp.cmd`를 실행하고, 본인의 Codex/ChatGPT 계정으로 로그인해 사용한다. 이 과정에서 원저장소 소유자의 Codex 계정이나 로컬 데이터가 공유되지 않는다.
+
 ## 검증
 
 ```bash

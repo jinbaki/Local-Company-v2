@@ -88,6 +88,21 @@ Codex 모바일 연결은 Codex 앱의 원격 연결 기능을 사용한다.
 
 휴대폰에서 Codex를 열고 연결된 PC 호스트를 선택한 뒤, Local Company PM에게 전달할 메시지를 요청한다.
 
+## 다른 사용자가 설치할 때
+
+이 MCP 연결은 저장소 소유자의 Codex 계정을 공유하는 방식이 아니다. 각 사용자는 자신의 PC에서 저장소를 클론하고, 자신의 Codex CLI 또는 Codex 앱에 로그인한 뒤 `install-local-company-mcp.cmd`를 실행한다.
+
+설치 파일은 실행된 PC의 프로젝트 폴더를 기준으로 MCP 서버 경로를 등록하고, `LOCAL_COMPANY_URL=http://127.0.0.1:8788` 로컬 주소만 Codex에 알려준다. 따라서 다른 사용자의 MCP 도구는 그 사용자의 로컬 Local Company 앱과 그 사용자의 Codex 계정을 사용한다.
+
+저장소에는 다음 정보를 넣지 않는다.
+
+- Codex 계정 ID 또는 로그인 토큰
+- API 키
+- 실제 `.env`
+- 실제 SQLite 데이터
+- 로컬 실행 로그
+- 개인 PC의 절대 경로
+
 ## 해제
 
 Codex에서 Local Company MCP를 더 이상 쓰지 않으려면 다음 파일을 실행한다.
